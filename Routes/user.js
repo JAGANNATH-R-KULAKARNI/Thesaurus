@@ -1,9 +1,13 @@
 const express=require('express');
 const router=express.Router();
-const {signup,signin,signout}=require('../Controllers/user');
-const {userSignupValidator}=require('../validator/index');
+const {requireSignin,isAuth,isAdmin}=require('../Controllers/auth');
+const {UserById}=require('../Controllers/user');
 
-router.post("/signup",userSignupValidator,signup);
-router.post('/signin',signin);
-router.get('/signout',signout);
+router.get('/secret/:userId',requireSignin,isAuth,isAdmin,(req,res)=>{
+    res.json({
+        user : req.profile
+    })
+})
+router.param('userId',UserById);
+
 module.exports=router;
